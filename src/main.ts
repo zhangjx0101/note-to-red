@@ -63,6 +63,11 @@ export default class RedPlugin extends Plugin {
     this.addSettingTab(new RedSettingTab(this.app, this));
   }
 
+  onunload() {
+    this.app.workspace.detachLeavesOfType(VIEW_TYPE_RED);
+    this.settingsManager.removeAllListeners();
+  }
+
   async activateView() {
     // 如果视图已经存在，激活它
         const leaves = this.app.workspace.getLeavesOfType(VIEW_TYPE_RED);  // 使用原来的视图类型

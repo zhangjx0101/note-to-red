@@ -133,9 +133,10 @@ export class SettingsManager extends EventEmitter {
     }
 
     async addCustomTheme(theme: Theme) {
-        theme.isPreset = false;
-        theme.isVisible = true;
-        this.settings.customThemes.push(theme);
+        const cloned = JSON.parse(JSON.stringify(theme));
+        cloned.isPreset = false;
+        cloned.isVisible = true;
+        this.settings.customThemes.push(cloned);
         await this.saveSettings();
         this.emit('theme-visibility-changed');
     }
@@ -157,10 +158,10 @@ export class SettingsManager extends EventEmitter {
 
         const customThemeIndex = this.settings.customThemes.findIndex(t => t.id === themeId);
         if (customThemeIndex !== -1) {
-            this.settings.customThemes[customThemeIndex] = {
+            this.settings.customThemes[customThemeIndex] = JSON.parse(JSON.stringify({
                 ...this.settings.customThemes[customThemeIndex],
                 ...updatedTheme
-            };
+            }));
             await this.saveSettings();
             this.emit('theme-visibility-changed');
             return true;

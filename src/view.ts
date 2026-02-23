@@ -78,6 +78,13 @@ export class RedView extends ItemView {
     // #endregion
 
     // #region 视图初始化
+    async onClose() {
+        if (this.updateTimer) {
+            window.clearTimeout(this.updateTimer);
+            this.updateTimer = null;
+        }
+    }
+
     async onOpen() {
         const container = this.containerEl.children[1];
         container.empty();
@@ -162,6 +169,16 @@ export class RedView extends ItemView {
     private updateNavigationState() {
         const sections = this.previewEl.querySelectorAll('.red-content-section');
         if (!this.navigationButtons) return;
+
+        if (sections.length === 0) {
+            this.navigationButtons.indicator.textContent = '0/0';
+            this.navigationButtons.prev.classList.add('red-nav-hidden');
+            this.navigationButtons.next.classList.add('red-nav-hidden');
+            return;
+        }
+
+        // 确保页码索引不超出实际页数范围
+        this.currentImageIndex = Math.min(this.currentImageIndex, sections.length - 1);
 
         sections.forEach((section, i) => {
             (section as HTMLElement).classList.toggle('red-section-active', i === this.currentImageIndex);
@@ -681,7 +698,7 @@ export class RedView extends ItemView {
             dropdown.classList.toggle('red-show');
         });
 
-        document.addEventListener('click', () => {
+        this.registerDomEvent(document, 'click', () => {
             dropdown.classList.remove('red-show');
         });
 

@@ -16,7 +16,7 @@ export class CreateThemeModal extends Modal {
         this.existingTheme = existingTheme;
         this.onSubmit = onSubmit;
 
-        this.theme = existingTheme ? { ...existingTheme } : {
+        this.theme = existingTheme ? JSON.parse(JSON.stringify(existingTheme)) : {
             id: '',
             name: '',
             description: '',
@@ -126,7 +126,7 @@ export class CreateThemeModal extends Modal {
                         .onChange(value => {
                             const selectedTheme = this.getThemeById(value);
                             if (selectedTheme) {
-                                this.theme = { ...selectedTheme, id: '', name: '', description: '', isPreset: false };
+                                this.theme = { ...JSON.parse(JSON.stringify(selectedTheme)), id: '', name: '', description: '', isPreset: false };
                             }
                         })
                         .selectEl;
